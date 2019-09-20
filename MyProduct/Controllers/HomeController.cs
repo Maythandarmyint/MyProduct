@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyProduct.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,23 +9,19 @@ namespace MyProduct.Controllers
 {
     public class HomeController : Controller
     {
+
+        private IProductService productService;
+
+        public HomeController(IProductService productService)
+        {
+            this.productService = productService;
+        }
+
         public ActionResult Index()
-        {
-            return View();
+        {            
+
+            return View(productService.GetProducts());
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
     }
 }
