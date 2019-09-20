@@ -38,7 +38,7 @@ namespace MyProduct.Services
             return products;
         }
 
-        public List<Category> GetCategory()
+        public List<Category> GetCategories()
         {
             List<Category> categories = new List<Category>();
             try
@@ -52,7 +52,21 @@ namespace MyProduct.Services
             return categories;
         }
 
-        public List<SubCategory> GetSubCategory()
+        public List<SubCategory> GetSubCategories()
+        {
+            List<SubCategory> subcategories = new List<SubCategory>();
+            try
+            {
+                subcategories = repoSubCategory.GetAll().ToList();
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message + "\n" + e.StackTrace);
+            }
+            return subcategories;
+        }
+
+        public List<SubCategory> GetSubCategoriesByCategory(int categoryid)
         {
             List<SubCategory> subcategories = new List<SubCategory>();
             try

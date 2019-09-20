@@ -1,10 +1,32 @@
 ﻿@using MyProduct.Models
-@model List<Product>
+@model IEnumerable<Product>
 
 @{
     ViewBag.Title = "Product List";
 }
 <h2>Product List</h2>
+<table style="margin:10px;">
+    <tr>
+        <td>Category</td>
+        <td>
+            <select class="form-control" id="category" >
+                <option value="0">ALL</option>
+                @foreach (var item in ViewBag.CategoryList)
+                {
+                    <option value="@item.CategoryId">@item.CategoryName</option>
+                }
+            </select>
+        </td>
+        <td>
+            Sub Category
+        </td>
+        <td>
+            <select class="form-control" id="subcategory">
+                <option value="0">ALL</option>
+            </select>
+        </td>
+    </tr>
+</table>
 <table class="table">
     <tr>
         <th>
@@ -21,16 +43,40 @@
 
     @foreach (var item in Model)
     {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.SubCategory.Category1.CategoryName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SubCategory.SubcategoryName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProductName)
-        </td>
-    </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubCategory.Category.CategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubCategory.SubcategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+        </tr>
     }
 </table>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#category").change(function (e) {
+            $.ajax({
+                method: 'GET',
+                url: '/Home/GetSubCategorieList',
+                data: {
+                    categoryid: $("#category").val()
+                },
+                success: function (responce) {
+                    $("#subcategory").empty();
+                    $('#subcategory').append('<option value=-1>ALL</option > ');
+                    $.each(responce, function (i, item) {
+                        $('#subcategory').append('<option value=' + item.id + '>' + item.text + '</option > ');
+                    });
+                },
+                error: function (responce) {
+                    alert("error : " + responce.error);
+                }
+            });
+        });
+    });
+</script>  

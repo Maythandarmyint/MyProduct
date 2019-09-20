@@ -24,7 +24,7 @@
           <Key>
             <PropertyRef Name="SubcategoryId" />
           </Key>
-          <Property Name="SubcategoryId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="SubcategoryId" Type="int" Nullable="false" />
           <Property Name="CategoryId" Type="int" Nullable="false" />
           <Property Name="SubcategoryName" Type="nvarchar" MaxLength="300" Nullable="false" />
         </EntityType>
@@ -69,56 +69,47 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ProductModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Category">
-          <Key>
-            <PropertyRef Name="CategoryId" />
-          </Key>
-          <Property Name="CategoryId" Type="Int32" Nullable="false" />
-          <Property Name="CategoryName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="SubCategory" Relationship="ProductModel.FK_SubCategory_Category" FromRole="Category" ToRole="SubCategory" />
-          <NavigationProperty Name="SubCategories" Relationship="ProductModel.FK_SubCategory_Category1" FromRole="Category" ToRole="SubCategory" />
-        </EntityType>
-        <EntityType Name="SubCategory">
-          <Key>
-            <PropertyRef Name="SubcategoryId" />
-          </Key>
-          <Property Name="SubcategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CategoryId" Type="Int32" Nullable="false" />
-          <Property Name="SubcategoryName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Category" Relationship="ProductModel.FK_SubCategory_Category" FromRole="SubCategory" ToRole="Category" />
-          <NavigationProperty Name="Category1" Relationship="ProductModel.FK_SubCategory_Category1" FromRole="SubCategory" ToRole="Category" />
-          <NavigationProperty Name="Products" Relationship="ProductModel.FK_Product_SubCategory" FromRole="SubCategory" ToRole="Product" />
-        </EntityType>
         <EntityContainer Name="ProductEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Categories" EntityType="Self.Category" />
-          <EntitySet Name="SubCategories" EntityType="Self.SubCategory" />
+          <EntitySet Name="Categories" EntityType="ProductModel.Category" />
+          <EntitySet Name="Products" EntityType="ProductModel.Product" />
+          <EntitySet Name="SubCategories" EntityType="ProductModel.SubCategory" />
           <AssociationSet Name="FK_SubCategory_Category" Association="ProductModel.FK_SubCategory_Category">
             <End Role="Category" EntitySet="Categories" />
             <End Role="SubCategory" EntitySet="SubCategories" />
           </AssociationSet>
-          <AssociationSet Name="FK_SubCategory_Category1" Association="ProductModel.FK_SubCategory_Category1">
-            <End Role="Category" EntitySet="Categories" />
-            <End Role="SubCategory" EntitySet="SubCategories" />
-          </AssociationSet>
-          <EntitySet Name="Products" EntityType="ProductModel.Product" />
           <AssociationSet Name="FK_Product_SubCategory" Association="ProductModel.FK_Product_SubCategory">
             <End Role="SubCategory" EntitySet="SubCategories" />
             <End Role="Product" EntitySet="Products" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SubCategories" Relationship="ProductModel.FK_SubCategory_Category" FromRole="Category" ToRole="SubCategory" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="ProductId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SubcategoryId" Type="Int32" Nullable="false" />
+          <Property Name="ProductName" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SubCategory" Relationship="ProductModel.FK_Product_SubCategory" FromRole="Product" ToRole="SubCategory" />
+        </EntityType>
+        <EntityType Name="SubCategory">
+          <Key>
+            <PropertyRef Name="SubcategoryId" />
+          </Key>
+          <Property Name="SubcategoryId" Type="Int32" Nullable="false" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="SubcategoryName" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Category" Relationship="ProductModel.FK_SubCategory_Category" FromRole="SubCategory" ToRole="Category" />
+          <NavigationProperty Name="Products" Relationship="ProductModel.FK_Product_SubCategory" FromRole="SubCategory" ToRole="Product" />
+        </EntityType>
         <Association Name="FK_SubCategory_Category">
-          <End Type="ProductModel.Category" Role="Category" Multiplicity="1" />
-          <End Type="ProductModel.SubCategory" Role="SubCategory" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Category">
-              <PropertyRef Name="CategoryId" />
-            </Principal>
-            <Dependent Role="SubCategory">
-              <PropertyRef Name="SubcategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SubCategory_Category1">
           <End Type="ProductModel.Category" Role="Category" Multiplicity="1" />
           <End Type="ProductModel.SubCategory" Role="SubCategory" Multiplicity="*" />
           <ReferentialConstraint>
@@ -130,15 +121,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Product">
-          <Key>
-            <PropertyRef Name="ProductId" />
-          </Key>
-          <Property Name="ProductId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SubcategoryId" Type="Int32" Nullable="false" />
-          <Property Name="ProductName" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="SubCategory" Relationship="ProductModel.FK_Product_SubCategory" FromRole="Product" ToRole="SubCategory" />
-        </EntityType>
         <Association Name="FK_Product_SubCategory">
           <End Type="ProductModel.SubCategory" Role="SubCategory" Multiplicity="1" />
           <End Type="ProductModel.Product" Role="Product" Multiplicity="*" />
@@ -160,17 +142,8 @@
           <EntitySetMapping Name="Categories">
             <EntityTypeMapping TypeName="ProductModel.Category">
               <MappingFragment StoreEntitySet="Category">
-                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
                 <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SubCategories">
-            <EntityTypeMapping TypeName="ProductModel.SubCategory">
-              <MappingFragment StoreEntitySet="SubCategory">
-                <ScalarProperty Name="SubcategoryId" ColumnName="SubcategoryId" />
                 <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
-                <ScalarProperty Name="SubcategoryName" ColumnName="SubcategoryName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -180,6 +153,15 @@
                 <ScalarProperty Name="ProductName" ColumnName="ProductName" />
                 <ScalarProperty Name="SubcategoryId" ColumnName="SubcategoryId" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubCategories">
+            <EntityTypeMapping TypeName="ProductModel.SubCategory">
+              <MappingFragment StoreEntitySet="SubCategory">
+                <ScalarProperty Name="SubcategoryName" ColumnName="SubcategoryName" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="SubcategoryId" ColumnName="SubcategoryId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

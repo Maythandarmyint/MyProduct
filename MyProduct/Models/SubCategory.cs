@@ -24,7 +24,6 @@ namespace MyProduct.Models
         public string SubcategoryName { get; set; }
     
         public virtual Category Category { get; set; }
-        public virtual Category Category1 { get; set; }
         public virtual ICollection<Product> Products { get; set; }
     }
 }

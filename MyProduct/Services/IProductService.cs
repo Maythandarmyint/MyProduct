@@ -10,5 +10,7 @@ namespace MyProduct.Services
     public interface IProductService
     {
         List<Product> GetProducts();
+        List<Category> GetCategories();
+        List<SubCategory> GetSubCategories();
     }
 }

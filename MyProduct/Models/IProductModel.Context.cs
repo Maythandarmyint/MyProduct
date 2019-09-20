@@ -13,7 +13,7 @@ namespace MyProduct.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class ProductEntities : DbContext, IProductEntities
+    public partial class ProductEntities : DbContext , IProductEntities
     {
         public ProductEntities()
             : base("name=ProductEntities")
@@ -26,7 +26,7 @@ namespace MyProduct.Models
         }
     
         public DbSet<Category> Categories { get; set; }
-        public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<SubCategory> SubCategories { get; set; }
     }
 }
